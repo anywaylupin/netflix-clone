@@ -2,6 +2,12 @@ import styled from "styled-components/macro"; //auto generate class names
 
 //tag can be changed
 export const Container = styled.section``;
+export const Divider = styled.div`
+  display: flex;
+  border-bottom: 9px solid #222;
+  color: white;
+  overflow: hidden;
+`;
 export const Card = styled.div`
   display: flex;
   align-items: center;
@@ -11,12 +17,9 @@ export const Card = styled.div`
   margin: auto;
   padding: 70px 45px;
   width: 100%;
-  border-bottom: 9px solid #222;
-  color: white;
-  overflow: hidden;
 
   @media (max-width: 949px) {
-      flex-direction: column;
+    flex-direction: column;
   }
 `;
 export const Content = styled.div`

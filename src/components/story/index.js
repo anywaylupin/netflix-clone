@@ -1,15 +1,19 @@
 import React from "react";
-import { Container, Card, Content, Title, Text, Image } from "./styles/story.js";
+import {
+  Container,
+  Divider,
+  Card,
+  Content,
+  Title,
+  Text,
+  Image,
+} from "./styles/story.js";
 
-export default function Story({
-  children,
-  direction = "row",
-  ...extraProps
-}) {
+export default function Story({ children, direction = "row", ...extraProps }) {
   return (
-    <Card {...extraProps} direction={direction}>
-      {children}
-    </Card>
+    <Divider {...extraProps}>
+      <Card direction={direction}>{children}</Card>
+    </Divider>
   );
 }
 

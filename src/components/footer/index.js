@@ -1,10 +1,10 @@
 import React from "react";
-import { Container, Story } from "./styles.js";
+import { Container, Text } from "./styles/footer.js";
 
 export default function Footer({ children, ...extraProps }) {
-  return (
-    <Footer direction={direction} {...extraProps}>
-      {children}
-    </Footer>
-  );
+  return <Container {...extraProps}>{children}</Container>;
 }
+
+Footer.Text = function FooterTop({ children, ...extraProps }) {
+  return <Text {...extraProps}>{children}</Text>;
+};

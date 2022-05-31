@@ -8,4 +8,11 @@ export const GlobalStyles = createGlobalStyle`
         line-height: normal;
         font-size: 16px;
     }
+    button {
+        background-color: #f65261;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 `;

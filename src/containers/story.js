@@ -1,6 +1,6 @@
 import React from "react";
 import { Story } from "../components";
-import storyData from "../components/story/data/card.json";
+import storyData from "../components/story/card.json";
 
 export default function StoryContainer() {
   return (

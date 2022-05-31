@@ -4,7 +4,7 @@ import styled from "styled-components/macro"; //auto generate class names
 export const Container = styled.section``;
 export const Divider = styled.div`
   display: flex;
-  border-bottom: 9px solid #222;
+  border-bottom: solid #222 9px;
   color: white;
   overflow: hidden;
 `;

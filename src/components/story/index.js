@@ -7,7 +7,7 @@ import {
   Title,
   Text,
   Image,
-} from "./styles/story.js";
+} from "../styles/story.js";
 
 export default function Story({ children, direction = "row", ...extraProps }) {
   return (

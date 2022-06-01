@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FirebaseContext } from "../firebase/context.js";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Account } from "../components/index.js";
 import HeaderContainer from "../containers/header.js";
 import FooterContainer from "../containers/footer.js";
@@ -8,7 +8,6 @@ import * as ROUTES from "../routes/route.js";
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { firebaseSignIn } = useContext(FirebaseContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,16 +17,17 @@ export default function SignIn() {
     event.preventDefault();
 
     //firebase Promise
-    firebaseSignIn
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
         navigate(ROUTES.BROWSE);
+        console.log("user", user);
       })
       .catch((error) => {
-        setEmail("");
-        setPassword("");
-        setError(error.message);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log({ errorCode, errorMessage });
       });
   };
 

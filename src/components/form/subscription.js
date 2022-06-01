@@ -16,7 +16,7 @@ Subscription.Input = function SubscriptionInput({ ...extraProps }) {
 Subscription.Button = function SubscriptionButton({ children, ...extraProps }) {
   return (
     <Button {...extraProps}>
-      {children} <i class="fa fa-chevron-right" />
+      {children} <i className="fa fa-chevron-right" />
     </Button>
   );
 };

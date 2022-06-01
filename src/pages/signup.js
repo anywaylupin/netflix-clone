@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FirebaseContext } from "../firebase/context.js";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Account } from "../components/index.js";
 import HeaderContainer from "../containers/header.js";
 import FooterContainer from "../containers/footer.js";
@@ -8,7 +8,6 @@ import * as ROUTES from "../routes/route.js";
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { firebaseSignUp } = useContext(FirebaseContext);
 
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,30 +19,20 @@ export default function SignUp() {
     event.preventDefault();
 
     //firebase Promise
-    firebaseSignUp
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((info) =>
-        info.user
-          .updateProfile({
-            displayName: firstName,
-            photoURL:
-              "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png?20201013161117",
-          })
-          .then(() => {
-            navigate(ROUTES.BROWSE);
-          })
-      )
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("user", user);
+      })
       .catch((error) => {
-        setFirstName("");
-        setEmail("");
-        setPassword("");
-        setError(error.message);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log({ errorCode, errorMessage });
       });
   };
 
   //check form input
-
   return (
     <>
       <HeaderContainer>

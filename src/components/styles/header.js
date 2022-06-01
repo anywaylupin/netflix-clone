@@ -25,6 +25,10 @@ export const Logo = styled.span`
     text-decoration: none;
     color: #f65261 !important;
   }
+
+  & > a:hover {
+    text-decoration: none;
+  }
 `;
 export const AuthLink = styled.span`
   display: block;

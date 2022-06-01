@@ -8,9 +8,6 @@ export const Container = styled.section`
   height: 100%;
   margin-top: 20px;
   flex-wrap: wrap;
-
-  @media (max-width: 949px) {
-  }
 `;
 export const Title = styled.h3`
   text-align: center;

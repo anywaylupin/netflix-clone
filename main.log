@@ -15,4 +15,5 @@ Background color, main font-size, main font-color
 Terminal: yarn add styled-components //CSS-in-JS
 Terminal: yarn add normalize.css //reset CSS
 
---- Generates 
+--- CONNECT FIREBASE ---
+To seed the database

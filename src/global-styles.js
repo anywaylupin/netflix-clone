@@ -15,4 +15,12 @@ export const GlobalStyles = createGlobalStyle`
         border-radius: 5px;
         cursor: pointer;
     }
+    a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
 `;

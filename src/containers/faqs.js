@@ -1,5 +1,5 @@
 import React from "react";
-import { Faqs, Form } from "../components";
+import { Faqs, Subscription } from "../components";
 import faqsData from "../components/faqs/faqs.json";
 
 export default function FaqsContainer() {
@@ -15,15 +15,15 @@ export default function FaqsContainer() {
         ))}
       </Faqs.List>
 
-      <Form>
-        <Form.Title>
+      <Subscription>
+        <Subscription.Title>
           Ready to watch? Enter your email to create or restart your membership.
-        </Form.Title>
-        <Form.Field>
-          <Form.Input placeholder="Email address" />
-          <Form.Button>Get Started </Form.Button>
-        </Form.Field>
-      </Form>
+        </Subscription.Title>
+        <Subscription.Field>
+          <Subscription.Input placeholder="Email address" />
+          <Subscription.Button>Get Started </Subscription.Button>
+        </Subscription.Field>
+      </Subscription>
     </Faqs>
   );
 }

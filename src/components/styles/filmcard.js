@@ -49,6 +49,23 @@ export const Time = styled.div`
     font-size: 20px;
   }
 `;
+export const Favorite = styled.div`
+  border: solid #f65261 2px;
+  border-radius: 50%;
+  text-align: center;
+  width: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  color: #f65261;
+  transition: 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+    background-color: #f65261;
+    color: black;
+  }
+`;
 export const Description = styled.div`
   height: 100px;
   overflow: auto;

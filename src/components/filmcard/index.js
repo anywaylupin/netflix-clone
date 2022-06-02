@@ -7,6 +7,7 @@ import {
   Title,
   Rating,
   Time,
+  Favorite,
   Description,
   Search,
 } from "../styles/filmcard.js";
@@ -34,6 +35,14 @@ FilmCard.Rating = function FilmCardRating({ children, ...extraProps }) {
 FilmCard.Time = function FilmCardTime({ children, ...extraProps }) {
   return <Time {...extraProps}>{children}</Time>;
 };
+FilmCard.Favorite = function FilmCardFavorite({ children, ...extraProps }) {
+  return (
+    <Favorite {...extraProps}>
+      {children}
+      <i className="fa fa-heart" />
+    </Favorite>
+  );
+};
 FilmCard.Description = function FilmCardDescription({
   children,
   ...extraProps
@@ -41,6 +50,9 @@ FilmCard.Description = function FilmCardDescription({
   return <Description {...extraProps}>{children}</Description>;
 };
 FilmCard.Search = function FilmCardSearch({ children, ...extraProps }) {
-  return <Search {...extraProps}><i className="fa fa-search" aria-hidden="true"></i>
-  </Search>;
+  return (
+    <Search {...extraProps}>
+      <i className="fa fa-search" aria-hidden="true" />
+    </Search>
+  );
 };

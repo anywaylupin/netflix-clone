@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Header, Shows, Subscription, FilmCard } from "../components";
 import { Link } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase.prod.js";
 import axios from "axios";
 import * as ROUTES from "../routes/route.js";
-import { Empty } from "../components/styles/shows";
 
 export default function BrowseContainer() {
   const [movies, setMovies] = useState([]);
@@ -66,6 +68,26 @@ export default function BrowseContainer() {
     },
     [movies, setFilteredMovies]
   );
+  const handleFavorite = useCallback((item) => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        // Add a new document in collection "cities"
+          try {
+            const docRef = await addDoc(collection(db, "favorites"), item);
+            console.log("Document written with ID: ", docRef.id);
+          } catch (e) {
+            console.error("Error adding document: ", e);
+          }
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+  });
 
   return (
     <>
@@ -101,6 +123,11 @@ export default function BrowseContainer() {
                   {selectedFilm?.premiered.slice(0, 4)}
                 </FilmCard.Time>
                 <FilmCard.Time>{selectedFilm?.runtime} min</FilmCard.Time>
+                <FilmCard.Favorite
+                  onClick={() => {
+                    handleFavorite(selectedFilm);
+                  }}
+                />
               </FilmCard.Frame>
               <FilmCard.Description
                 dangerouslySetInnerHTML={{ __html: selectedFilm?.summary }}

@@ -23,4 +23,10 @@ export const GlobalStyles = createGlobalStyle`
     a:hover {
         text-decoration: underline;
     }
+    .find-title, .search-bar {
+        margin-top: 40px;
+    }
+    .hidden {
+        display: none;
+    }
 `;

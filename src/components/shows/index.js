@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, NavBar, Item, Cover, Title, Info, Genre, Year } from "../styles/shows.js";
+import { Container, NavBar, Item, Cover, Title, Info, Genre, Year, Empty } from "../styles/shows.js";
 
 export default function Shows({ children, ...extraProps }) {
   return <Container {...extraProps}>{children}</Container>;
@@ -31,4 +31,7 @@ Shows.Genre = function ShowsGenre({ children, ...extraProps }) {
 
 Shows.Year = function ShowsYear({ children, ...extraProps }) {
   return <Year {...extraProps}>{children}</Year>;
+};
+Shows.Empty = function ShowsEmpty({ children, ...extraProps }) {
+  return <Empty {...extraProps}>{children}</Empty>;
 };

@@ -67,3 +67,4 @@ export const Year = styled.span`
   border-radius: 5px;
   padding: 5px 15px;
 `;
+export const Empty = styled.div``;

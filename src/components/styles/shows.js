@@ -47,6 +47,7 @@ export const Item = styled.div`
 `;
 export const Cover = styled.img`
   width: 100%;
+  height: 430px;
   margin: auto;
 `;
 export const Info = styled.div`

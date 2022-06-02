@@ -26,7 +26,4 @@ export const GlobalStyles = createGlobalStyle`
     .find-title, .search-bar {
         margin-top: 40px;
     }
-    .hidden {
-        display: none;
-    }
 `;

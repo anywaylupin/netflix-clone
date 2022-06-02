@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Header, Shows, Subscription } from "../components";
+import { Header, Shows, Subscription, FilmCard } from "../components";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import * as ROUTES from "../routes/route.js";
@@ -11,6 +11,8 @@ export default function BrowseContainer() {
   const [input, setInput] = useState("");
   const [isActive, setActive] = useState([false, false, false, false, false]);
   const [isEmpty, setEmpty] = useState(false);
+  const [isSelect, setSelect] = useState(false);
+  const [selectedFilm, setSelectedFilm] = useState({});
 
   useEffect(() => {
     const loadData = async () => {
@@ -44,6 +46,8 @@ export default function BrowseContainer() {
     let res = [false, false, false, false, false];
     res[key] = true;
     setActive(res);
+    setSelect(false);
+    setSelectedFilm({});
   });
 
   const handleSwitchTab = useCallback(
@@ -70,20 +74,56 @@ export default function BrowseContainer() {
           <Header.Logo>
             <Link to={ROUTES.HOME}>notflix</Link>
           </Header.Logo>
+          {isSelect ? (
+            <FilmCard.Search
+              onClick={() => {
+                setSelect(false);
+                setSelectedFilm();
+              }}
+            />
+          ) : null}
         </Header.Frame>
-        <Header.Title className="find-title">Find Your Movie</Header.Title>
-        <Subscription.Field className="search-bar">
-          <Subscription.Input
-            placeholder="What do you want to watch?"
-            type="text"
-            onInput={(e) => setInput(e.target.value)}
-            value={input}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch(input)}
-          />
-          <Subscription.Button onClick={() => handleSearch(input)}>
-            Search
-          </Subscription.Button>
-        </Subscription.Field>
+        {isSelect ? (
+          <FilmCard>
+            <FilmCard.Cover
+              src={selectedFilm?.image?.medium}
+              alt={selectedFilm?.name}
+            />
+            <FilmCard.Info>
+              <FilmCard.Frame>
+                <FilmCard.Title>{selectedFilm?.name}</FilmCard.Title>
+                <FilmCard.Rating>
+                  {selectedFilm?.rating.average}
+                </FilmCard.Rating>
+              </FilmCard.Frame>
+              <FilmCard.Frame>
+                <FilmCard.Time>
+                  {selectedFilm?.premiered.slice(0, 4)}
+                </FilmCard.Time>
+                <FilmCard.Time>{selectedFilm?.runtime} min</FilmCard.Time>
+              </FilmCard.Frame>
+              <FilmCard.Description
+                dangerouslySetInnerHTML={{ __html: selectedFilm?.summary }}
+              />
+            </FilmCard.Info>
+          </FilmCard>
+        ) : (
+          <>
+            <Header.Title className="find-title">Find Your Movie</Header.Title>
+            <Subscription.Field className="search-bar">
+              <Subscription.Input
+                placeholder="What do you want to watch?"
+                type="text"
+                onInput={(e) => setInput(e.target.value)}
+                value={input}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch(input)}
+              />
+              <Subscription.Button onClick={() => handleSearch(input)}>
+                Search
+              </Subscription.Button>
+            </Subscription.Field>
+          </>
+        )}
       </Header>
       <Shows.NavBar>
         <button
@@ -137,13 +177,18 @@ export default function BrowseContainer() {
           Crime
         </button>
       </Shows.NavBar>
+
       <Shows>
         {filteredMovies.map((item, index) => (
           <Shows.Item
             key={index}
             className={item?.genres.join(" ").toUpperCase() + "show-item"}
+            onClick={() => {
+              setSelect(true);
+              setSelectedFilm(item);
+            }}
           >
-            <Shows.Cover src={item?.image?.medium} alt={item?.name} />
+            <Shows.Cover src={item?.image?.original} alt={item?.name} />
             <Shows.Info>
               <Shows.Title>
                 {item?.name}
@@ -153,10 +198,14 @@ export default function BrowseContainer() {
             </Shows.Info>
           </Shows.Item>
         ))}
-        <Shows.Empty className={!isEmpty ? "hidden" : null}>
-          <h2>Oh darn! We don't have that.</h2>
-          <p>Try searching for another movie, show, genre or released year.</p>
-        </Shows.Empty>
+        {isEmpty ? (
+          <Shows.Empty>
+            <h2>Oh darn! We don't have that.</h2>
+            <p>
+              Try searching for another movie, show, genre or released year.
+            </p>
+          </Shows.Empty>
+        ) : null}
       </Shows>
     </>
   );

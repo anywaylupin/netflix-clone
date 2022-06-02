@@ -10,7 +10,7 @@ export default function FaqsContainer() {
         {faqsData.map((item) => (
           <Faqs.Item key={item.id}>
             <Faqs.Question>{item.question}</Faqs.Question>
-            <Faqs.Answer>{item.answer}</Faqs.Answer>
+            <Faqs.Answer dangerouslySetInnerHTML={{ __html: item.answer }} />
           </Faqs.Item>
         ))}
       </Faqs.List>

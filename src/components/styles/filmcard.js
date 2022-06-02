@@ -56,14 +56,13 @@ export const Favorite = styled.div`
   width: 40px;
   line-height: 40px;
   font-size: 20px;
-  color: #f65261;
+  color: white;
   transition: 0.2s;
   cursor: pointer;
 
   &:hover {
     transform: scale(1.2);
-    background-color: #f65261;
-    color: black;
+    color: #f65261;
   }
 `;
 export const Description = styled.div`

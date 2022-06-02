@@ -2,7 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Header, Shows, Subscription, FilmCard } from "../components";
 import { Link } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  addDoc,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase.prod.js";
 import axios from "axios";
 import * as ROUTES from "../routes/route.js";
@@ -11,10 +17,18 @@ export default function BrowseContainer() {
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [input, setInput] = useState("");
-  const [isActive, setActive] = useState([false, false, false, false, false]);
+  const [isActive, setActive] = useState([
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [isEmpty, setEmpty] = useState(false);
   const [isSelect, setSelect] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState({});
+  const [isFavorite, setFavorite] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -23,7 +37,6 @@ export default function BrowseContainer() {
       ).data;
       setMovies(response);
       setFilteredMovies(response);
-      console.log("response", response);
     };
     loadData();
   }, []);
@@ -50,7 +63,7 @@ export default function BrowseContainer() {
     setActive(res);
     setSelect(false);
     setSelectedFilm({});
-  });
+  }, []);
 
   const handleSwitchTab = useCallback(
     (genre) => {
@@ -68,26 +81,51 @@ export default function BrowseContainer() {
     },
     [movies, setFilteredMovies]
   );
+
+  const filmFavoriteCheck = useCallback(
+    async (item) => {
+      const favoritesList = await getDocs(collection(db, "favorites"));
+      setFavorite(false);
+      favoritesList.forEach((doc) => {
+        if (doc.data().id === item.id) {
+          setFavorite(true);
+          console.log(isFavorite);
+        }
+      });
+    },
+    [isFavorite, setFavorite]
+  );
+
   const handleFavorite = useCallback((item) => {
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         // Add a new document in collection "cities"
+        filmFavoriteCheck(item);
+        if (!isFavorite) {
           try {
-            const docRef = await addDoc(collection(db, "favorites"), item);
-            console.log("Document written with ID: ", docRef.id);
+            await addDoc(collection(db, "favorites"), item);
+            console.log("Document written with ID: ", item.id);
           } catch (e) {
             console.error("Error adding document: ", e);
           }
-        // ...
-      } else {
-        // User is signed out
-        // ...
+        } else {
+          await deleteDoc(doc(db, "favorites", item));
+          console.log("Document with ID: " + item.id + " has been deleted");
+        }
       }
     });
-  });
+  }, []);
+
+  const handleFavoriteTab = useCallback(() => {
+    let array = movies.filter((item) => {
+      filmFavoriteCheck(item);
+      return isFavorite;
+    });
+    setFilteredMovies(array);
+  }, []);
 
   return (
     <>
@@ -124,6 +162,7 @@ export default function BrowseContainer() {
                 </FilmCard.Time>
                 <FilmCard.Time>{selectedFilm?.runtime} min</FilmCard.Time>
                 <FilmCard.Favorite
+                  className={isFavorite ? "isFavorite" : null}
                   onClick={() => {
                     handleFavorite(selectedFilm);
                   }}
@@ -203,14 +242,25 @@ export default function BrowseContainer() {
         >
           Crime
         </button>
+        <button
+          key={"nav-favorite"}
+          className={isActive[5] ? "active" : null}
+          onClick={() => {
+            toggleClick(5);
+            handleFavoriteTab();
+          }}
+        >
+          Favorites
+        </button>
       </Shows.NavBar>
 
       <Shows>
         {filteredMovies.map((item, index) => (
           <Shows.Item
             key={index}
-            className={item?.genres.join(" ").toUpperCase() + "show-item"}
+            className={item?.genres.join(" ").toUpperCase() + " show-item"}
             onClick={() => {
+              filmFavoriteCheck(item);
               setSelect(true);
               setSelectedFilm(item);
             }}

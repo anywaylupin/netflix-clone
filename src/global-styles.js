@@ -26,4 +26,12 @@ export const GlobalStyles = createGlobalStyle`
     .find-title, .search-bar {
         margin-top: 40px;
     }
+    .isFavorite {
+        background-color: black;
+        color: #f65261;
+    }
+    .isFavorite:hover {
+        background-color: #f65261;
+        color: white;
+    }
 `;

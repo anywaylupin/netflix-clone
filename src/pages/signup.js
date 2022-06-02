@@ -23,11 +23,13 @@ export default function SignUp() {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        navigate(ROUTES.BROWSE);
         console.log("user", user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setError(errorMessage);
         console.log({ errorCode, errorMessage });
       });
   };

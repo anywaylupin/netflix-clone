@@ -40,6 +40,7 @@ export const Input = styled.input`
   padding: 10px;
   height: 65px;
   box-sizing: border-box;
+  border-radius: 5px;
   @media (max-width: 1449px) {
     height: 60px;
   }

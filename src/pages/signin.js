@@ -27,6 +27,7 @@ export default function SignIn() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setError(errorMessage);
         console.log({ errorCode, errorMessage });
       });
   };
@@ -39,7 +40,6 @@ export default function SignIn() {
         <Account>
           <Account.Title>Sign In</Account.Title>
           {error && <Account.Error>{error}</Account.Error>}
-
           <Account.Form onSubmit={handleSignIn} method="POST">
             <Account.Input
               placeholder="Email"

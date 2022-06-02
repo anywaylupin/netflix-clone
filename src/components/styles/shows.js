@@ -28,6 +28,10 @@ export const NavBar = styled.div`
   & > button.active {
     border-bottom: solid #f65261 2px;
   }
+
+  @media (max-width: 679px) {
+    display: none;
+  }
 `;
 
 export const Item = styled.div`

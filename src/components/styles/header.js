@@ -4,8 +4,9 @@ export const Container = styled.section`
   display: flex;
   flex-direction: column;
   padding-bottom: 100px;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${`https://assets.nflxext.com/ffe/siteui/vlv3/970e664f-2df4-47ce-b4fa-446082f5abc1/fd873ca8-2d92-4212-a5e2-82f07089566a/VN-en-20220523-popsignuptwoweeks-perspective_alpha_website_small.jpg`})
-    center center / cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(${`https://assets.nflxext.com/ffe/siteui/vlv3/970e664f-2df4-47ce-b4fa-446082f5abc1/fd873ca8-2d92-4212-a5e2-82f07089566a/VN-en-20220523-popsignuptwoweeks-perspective_alpha_website_small.jpg`})
+      center center / cover no-repeat;
 
   border-bottom: solid #222 9px;
 `;
@@ -45,6 +46,9 @@ export const AuthLink = styled.span`
   & > a {
     text-decoration: none;
     color: white;
+  }
+  & > a:hover {
+    text-decoration: none;
   }
 
   &:hover {

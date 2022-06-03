@@ -7,3 +7,4 @@ export { default as Account } from "./form/account";
 export { default as Shows } from "./shows";
 export { default as FilmCard } from "./filmcard";
 export { default as NotFound } from "./notfound";
+export { default as Loading } from "./loading";

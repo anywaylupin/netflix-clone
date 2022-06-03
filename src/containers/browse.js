@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Header, Shows, Subscription, FilmCard } from "../components";
+import { Header, Shows, Subscription, FilmCard, Loading } from "../components";
 import { Link } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   doc,
   addDoc,
+  getDoc,
+  setDoc,
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
@@ -29,6 +31,7 @@ export default function BrowseContainer() {
   const [isSelect, setSelect] = useState(false);
   const [selectedFilm, setSelectedFilm] = useState({});
   const [isFavorite, setFavorite] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
@@ -39,6 +42,13 @@ export default function BrowseContainer() {
       setFilteredMovies(response);
     };
     loadData();
+  }, []);
+
+  useEffect(() => {
+    console.log("loading");
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   }, []);
 
   const handleSearch = useCallback(
@@ -66,14 +76,18 @@ export default function BrowseContainer() {
   }, []);
 
   const handleSwitchTab = useCallback(
-    (genre) => {
+    async (genre) => {
       const tag = genre.toUpperCase();
 
-      let array = [];
-      if (tag === "ALL") {
+      if (tag === "FAVORITES") {
+        const favoritesList = await (
+          await getDocs(collection(db, "favorites"))
+        ).docs.map((item) => item.data());
+        setFilteredMovies(favoritesList);
+      } else if (tag === "ALL") {
         setFilteredMovies(movies);
       } else {
-        array = movies.filter((item) =>
+        const array = movies.filter((item) =>
           item.genres.map((item) => item.toUpperCase()).includes(tag)
         );
         setFilteredMovies(array);
@@ -84,50 +98,41 @@ export default function BrowseContainer() {
 
   const filmFavoriteCheck = useCallback(
     async (item) => {
-      const favoritesList = await getDocs(collection(db, "favorites"));
-      setFavorite(false);
-      favoritesList.forEach((doc) => {
-        if (doc.data().id === item.id) {
-          setFavorite(true);
-          console.log(isFavorite);
+      const isExist = await (
+        await getDocs(collection(db, "favorites", item.name))
+      ).exists();
+      setFavorite(isExist);
+    },
+    [setFavorite]
+  );
+
+  const handleFavorite = useCallback(
+    (item) => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          // Add a new document in collection "cities"
+          filmFavoriteCheck(item);
+          if (!isFavorite) {
+            try {
+              await setDoc(doc(db, "favorites", item.name), item);
+              console.log("Document written with ID: ", item.id);
+            } catch (e) {
+              console.error("Error adding document: ", e);
+            }
+          } else {
+            await deleteDoc(doc(db, "favorites", item.name));
+            console.log("Document with ID: " + item.id + " has been deleted");
+          }
         }
       });
     },
-    [isFavorite, setFavorite]
+    [isFavorite, filmFavoriteCheck]
   );
 
-  const handleFavorite = useCallback((item) => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
-        // Add a new document in collection "cities"
-        filmFavoriteCheck(item);
-        if (!isFavorite) {
-          try {
-            await addDoc(collection(db, "favorites"), item);
-            console.log("Document written with ID: ", item.id);
-          } catch (e) {
-            console.error("Error adding document: ", e);
-          }
-        } else {
-          await deleteDoc(doc(db, "favorites", item));
-          console.log("Document with ID: " + item.id + " has been deleted");
-        }
-      }
-    });
-  }, []);
-
-  const handleFavoriteTab = useCallback(() => {
-    let array = movies.filter((item) => {
-      filmFavoriteCheck(item);
-      return isFavorite;
-    });
-    setFilteredMovies(array);
-  }, []);
-
-  return (
+  return !loading ? (
     <>
       <Header>
         <Header.Frame>
@@ -247,13 +252,12 @@ export default function BrowseContainer() {
           className={isActive[5] ? "active" : null}
           onClick={() => {
             toggleClick(5);
-            handleFavoriteTab();
+            handleSwitchTab("favorites");
           }}
         >
           Favorites
         </button>
       </Shows.NavBar>
-
       <Shows>
         {filteredMovies.map((item, index) => (
           <Shows.Item
@@ -284,6 +288,9 @@ export default function BrowseContainer() {
           </Shows.Empty>
         ) : null}
       </Shows>
+      )
     </>
+  ) : (
+    <Loading />
   );
 }
